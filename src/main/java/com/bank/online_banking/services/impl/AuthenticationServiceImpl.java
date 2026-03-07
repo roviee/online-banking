@@ -5,6 +5,7 @@ import com.bank.online_banking.dto.request.LoginRequest;
 import com.bank.online_banking.dto.request.RegisterRequest;
 import com.bank.online_banking.dto.response.LoginResponse;
 import com.bank.online_banking.dto.response.RegisterResponse;
+import com.bank.online_banking.model.entity.RefreshToken;
 import com.bank.online_banking.model.entity.User;
 import com.bank.online_banking.model.enums.UserRole;
 import com.bank.online_banking.model.enums.UserStatus;
@@ -28,6 +29,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     private final JwtService jwtService;
+
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public RegisterResponse signup(RegisterRequest request) {
@@ -70,9 +73,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
         String jwtToken = jwtService.generateToken(user);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
 
         LoginResponse response = new LoginResponse();
         response.setAccessToken(jwtToken);
+        response.setRefreshToken(refreshToken.getToken());
         response.setExpiresIn(jwtService.getExpirationTime());
         response.setUserDto(UserMapper.toDto(user));
 
