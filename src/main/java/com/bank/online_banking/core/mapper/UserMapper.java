@@ -1,4 +1,4 @@
-package com.bank.online_banking.dto.mapper;
+package com.bank.online_banking.core.mapper;
 
 import com.bank.online_banking.dto.UserDto;
 import com.bank.online_banking.model.entity.User;
