@@ -1,6 +1,6 @@
 package com.bank.online_banking.services.impl;
 
-import com.bank.online_banking.dto.mapper.UserMapper;
+import com.bank.online_banking.core.mapper.UserMapper;
 import com.bank.online_banking.dto.request.LoginRequest;
 import com.bank.online_banking.dto.request.RegisterRequest;
 import com.bank.online_banking.dto.response.LoginResponse;
