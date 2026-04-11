@@ -1,21 +1,33 @@
 package com.bank.online_banking.dto.request;
 
-import com.bank.online_banking.dto.response.AccountDetailsResponse;
-import com.bank.online_banking.model.entity.Account;
-import com.bank.online_banking.model.enums.TransactionType;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 public class CreateTransactionRequest {
-    private UUID fromAccount;
-    private Account toAccount;
+    
+    @NotBlank(message = "Destination account is required")
+    @Size(min = 5, max = 20, message = "Invalid account number format")
+    private String toAccountId;
+    
+    @NotNull(message = "Amount is required")
+    @Positive(message = "Amount must be positive")
+    @Digits(integer = 13, fraction = 2, message = "Invalid amount format")
     private BigDecimal amount;
+    
+    @NotBlank(message = "Currency is required")
+    @Pattern(regexp = "^[A-Z]{3}$", message = "Currency must be 3-letter ISO code")
     private String currency;
+    
+    @NotBlank(message = "Description is required")
+    @Size(min = 3, max = 200, message = "Description must be 3-200 characters")
     private String description;
+    
+    @Size(max = 500, message = "Notes cannot exceed 500 characters")
     private String notes;
+    
     private LocalDateTime scheduledDate;
 }

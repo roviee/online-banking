@@ -15,5 +15,5 @@ public class AccountCreateResponse {
     private String accountType;
     private BigDecimal balance;
     private String currency;
-    private String userStatus;
+    private String accountStatus;
 }

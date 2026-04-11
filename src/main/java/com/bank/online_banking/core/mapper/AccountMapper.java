@@ -9,24 +9,32 @@ public class AccountMapper {
     public static AccountSummaryResponse toDetailsResponse(Account acc) {
         return new AccountSummaryResponse(
                 acc.getAccountId(),
-                acc.getAccountNumber(),
                 acc.getAccountType(),
                 acc.getBalance(),
                 acc.getCurrency(),
-                acc.getUserStatus(),
+                acc.getAccountStatus(),
                 acc.getCreatedAt()
         );
     }
 
     public static AccountCreateResponse toCreateResponse(Account account) {
         AccountCreateResponse dto = new AccountCreateResponse();
-        dto.setAccountId(account.getAccountId().toString());
-        dto.setAccountNumber(account.getAccountNumber());
+        dto.setAccountId(account.getAccountId());
         dto.setAccountType(account.getAccountType().toString());
         dto.setBalance(account.getBalance());
         dto.setCurrency(account.getCurrency());
-        dto.setUserStatus(account.getUserStatus().toString());
-
+        dto.setAccountStatus(account.getAccountStatus().toString());
         return dto;
+    }
+
+    public static AccountSummaryResponse toSummaryResponse(Account account) {
+        return new AccountSummaryResponse(
+                account.getAccountId(),
+                account.getAccountType(),
+                account.getBalance(),
+                account.getCurrency(),
+                account.getAccountStatus(),
+                account.getCreatedAt()
+        );
     }
 }
