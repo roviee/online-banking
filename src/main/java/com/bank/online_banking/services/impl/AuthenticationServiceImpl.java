@@ -142,6 +142,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken.getToken())
                 .expiresIn(jwtService.getExpirationTime())
+                .tokenType("Bearer")
                 .userDto(UserMapper.toDto(user))
                 .build();
     }

@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class AccountCreateResponse {
     private String accountId;
-    private String accountNumber;
     private String accountType;
     private BigDecimal balance;
     private String currency;
