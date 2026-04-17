@@ -42,6 +42,7 @@ public class RefreshTokenService {
                 .ifPresent(existingToken -> {
                     log.debug("Deleting existing refresh token for user: {}", userId);
                     refreshTokenRepository.delete(existingToken);
+                    refreshTokenRepository.flush();
                 });
 
         // Create new refresh token
@@ -66,6 +67,7 @@ public class RefreshTokenService {
 
         if (isTokenExpired(token)) {
             refreshTokenRepository.delete(token);
+            refreshTokenRepository.flush();
             log.warn("Refresh token expired for user: {}", token.getUser().getUserId());
             throw new UnauthorizedTransactionException("Refresh token expired");
         }
@@ -79,6 +81,7 @@ public class RefreshTokenService {
 
         // Delete old refresh token
         refreshTokenRepository.delete(token);
+        refreshTokenRepository.flush();
         log.debug("Old refresh token deleted for user: {}", user.getUserId());
 
         // Create new refresh token
@@ -100,6 +103,7 @@ public class RefreshTokenService {
     public void deleteByUserId(User user) {
         try {
             refreshTokenRepository.deleteByUser(user);
+            refreshTokenRepository.flush();
             log.info("Refresh token deleted for user: {}", user.getUserId());
         } catch (Exception e) {
             log.error("Error deleting refresh token for user: {}", user.getUserId(), e);
