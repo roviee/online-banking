@@ -15,8 +15,7 @@ import com.bank.online_banking.repository.TransactionRepository;
 import com.bank.online_banking.security.CurrentUserService;
 import com.bank.online_banking.services.TransactionService;
 import com.bank.online_banking.validator.TransactionValidator;
-import jakarta.persistence.LockModeType;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionValidator validator;
 
     @Override
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public TransactionResponse createTransaction(CreateTransactionRequest request) {
 
         log.info("Processing transaction request for amount: {}", request.getAmount());
