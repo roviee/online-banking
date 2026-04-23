@@ -3,6 +3,7 @@ package com.bank.online_banking.services.impl;
 import com.bank.online_banking.core.generator.PrefixIdGenerator;
 import com.bank.online_banking.core.mapper.TransactionMapper;
 import com.bank.online_banking.dto.request.CreateTransactionRequest;
+import com.bank.online_banking.dto.response.TransactionDetailsResponse;
 import com.bank.online_banking.dto.response.TransactionResponse;
 import com.bank.online_banking.exceptions.*;
 import com.bank.online_banking.model.entity.Account;
@@ -35,6 +36,18 @@ public class TransactionServiceImpl implements TransactionService {
     private final PrefixIdGenerator prefixIdGenerator;
     private final CurrentUserService currentUserService;
     private final TransactionValidator validator;
+
+    @Override
+    public TransactionDetailsResponse getTransactionById(UUID transactionId) {
+        User currentUser = currentUserService.getCurrentUser();
+
+        Transaction transaction = transactionRepository
+                .findAuthorizedTransaction(transactionId, currentUser.getUserId())
+                .orElseThrow(() -> new TransactionNotFoundException(transactionId.toString()));
+
+         log.info("Getting transaction with id {}", transactionId);
+         return TransactionMapper.toDetailsResponse(transaction);
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
