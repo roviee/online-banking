@@ -5,6 +5,7 @@ import com.bank.online_banking.model.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,19 +20,23 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+    @Index(name = "idx_email", columnList = "email"),
+    @Index(name = "idx_user_status", columnList = "user_status")
+})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Account> accounts;
 
     @Column(nullable = false, length = 50)
@@ -40,7 +45,7 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 50)
     private String lastName;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
 
     @Column(nullable = false)
@@ -50,17 +55,25 @@ public class User implements UserDetails {
 
     private LocalDate dateOfBirth;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    @Column(nullable = false)
     private int failedLoginAttempts;
+    
     private Instant accountLockedUntil;
 
+    @Column(nullable = false, updatable = false)
     private Instant createdAt;
+    
+    @Column(nullable = false)
     private Instant updatedAt;
+    
     private Instant lastLogin;
 
     @Override
@@ -80,12 +93,12 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return userStatus != UserStatus.SUSPENDED;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return userStatus != UserStatus.LOCKED;
     }
 
     @Override
@@ -95,6 +108,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return userStatus == UserStatus.ACTIVE;
     }
 }
