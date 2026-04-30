@@ -30,14 +30,8 @@ public class PrefixIdGenerator {
     }
 
     public String generateTransactionNumber(){
-        Transaction lastTransaction = transactionRepository.findTopByOrderByIdDesc();
-        int nextNumber = 1;
-
-        if (lastTransaction != null && lastTransaction.getTransactionId() != null) {
-            String numberPart = lastTransaction.getTransactionId().replace(TXN, "");
-            nextNumber = Integer.parseInt(numberPart) + 1;
-        }
-        return TXN + String.format("%07d", nextNumber);
+        Long seq = transactionRepository.getNextTxnSequence();
+        return TXN + String.format("%07d", seq);
     }
 
 }

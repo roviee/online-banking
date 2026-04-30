@@ -8,7 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface TransactionRepository extends JpaRepository<Transaction, UUID> {
-    Transaction findTopByOrderByIdDesc();
+    @Query(value = "SELECT nextval('txn_seq')", nativeQuery = true)
+    Long getNextTxnSequence();
     @Query("""
         SELECT t FROM Transaction t
         WHERE t.id = :id
